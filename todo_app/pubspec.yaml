@@ -14,6 +14,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  #parsing and date manipulation
+  simple_moment: ^1.1.1
+  #Alternatively, try Jiffy https://pub.dev/packages/jiffy
+  #jiffy: ^5.0.0
 
 dev_dependencies:
   flutter_test:
