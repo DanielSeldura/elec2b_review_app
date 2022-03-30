@@ -75,24 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   toggleDone(Todo todo) {
+    todo.toggleDone();
     if (mounted) {
       setState(() {
-        todo.toggleDone();
       });
     }
   }
 
   addTodo(Todo todo) {
+    todos.add(todo);
     if (mounted) {
       setState(() {
-        todos.add(todo);
       });
     }
   }
 
   removeTodo(Todo toBeDeleted) {
     todos.remove(toBeDeleted);
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   showAddDialog(BuildContext context) async {
@@ -132,8 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
     if (result != null) {
       if (mounted) {
+        todo.updateDetails(result.details);
         setState(() {
-          todo.updateDetails(result.details);
         });
       }
     }
@@ -150,7 +152,9 @@ class InputWidget extends StatefulWidget {
 
 class _InputWidgetState extends State<InputWidget> {
   final TextEditingController _tCon = TextEditingController();
+
   String? get current => widget.current;
+
   @override
   void initState() {
     if (current != null) _tCon.text = current as String;
@@ -235,7 +239,8 @@ class TodoCard extends StatelessWidget {
   final Function()? onTap;
   final Function()? onLongPress;
   final EdgeInsets? margin;
-  const TodoCard(
+  final ScrollController _sc = ScrollController();
+  TodoCard(
       {required this.todo,
       this.onTap,
       this.onLongPress,
@@ -290,23 +295,21 @@ class TodoCard extends StatelessWidget {
                     )
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            todo.details,
-                            style: TextStyle(
-                                decoration: todo.done
-                                    ? TextDecoration.lineThrough
-                                    : null),
-                          ),
-                        ),
+                Expanded(
+                  child: Scrollbar(
+                    controller: _sc,
+                    isAlwaysShown: true,
+                    child: SingleChildScrollView(
+                      controller: _sc,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        todo.details,
+                        style: TextStyle(
+                            decoration:
+                                todo.done ? TextDecoration.lineThrough : null),
                       ),
                     ),
-                  ],
+                  ),
                 )
               ],
             ),
