@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/src/screens/home.dart';
+import 'package:todo_app/src/screens/todos/todo_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: TodoScreen(),
     );
   }
 }
