@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/src/controllers/todo_controller.dart';
+import 'package:todo_app/src/screens/login/auth_controller.dart';
 import 'package:todo_app/src/screens/todos/todo_model.dart';
 import 'package:todo_app/src/screens/todos/widgets/input_widget.dart';
 import 'package:todo_app/src/screens/todos/widgets/todo_card.dart';
 
 class TodoScreen extends StatefulWidget {
-  const TodoScreen({Key? key}) : super(key: key);
+  final AuthController auth;
+  const TodoScreen(this.auth, {Key? key}) : super(key: key);
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  final TodoController _todoController = TodoController();
+  late TodoController _todoController;
   final ScrollController _sc = ScrollController();
+  AuthController get _auth => widget.auth;
+  @override
+  void initState() {
+    _todoController = TodoController(_auth.currentUser!.username);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +29,13 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(
         title: const Text('Todos App'),
         backgroundColor: const Color(0xFF303030),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _auth.logout();
+              },
+              icon: const Icon(Icons.logout))
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF303030),

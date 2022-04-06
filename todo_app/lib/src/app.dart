@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/src/screens/todos/todo_screen.dart';
+import 'package:todo_app/src/screens/login/auth_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -8,9 +8,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TodoScreen(),
+      home: Wrapper(),
     );
   }
 }
