@@ -13,6 +13,7 @@ class AuthController with ChangeNotifier {
       print(entry);
       users.add(User.fromJson(Map<String, dynamic>.from(entry)));
     }
+    loadCurrentLoggedInUser();
     notifyListeners();
   }
 
@@ -20,18 +21,26 @@ class AuthController with ChangeNotifier {
     if (userExists(username) != null) {
       return 'Error: the username is already taken';
     } else {
-      users.add(User(username: username, password: password));
+      User registerUser = User(username: username, password: password);
+      users.add(registerUser);
       saveDataToCache();
+      currentUser = registerUser;
+      saveCurrentLoggedInUser();
+      notifyListeners();
+
       return "User Successfully registered";
     }
   }
 
   bool login(String username, String password) {
+    print(username);
+    print(password);
     User? userSearchResult = userExists(username);
     if (userSearchResult != null) {
       bool result = userSearchResult.login(username, password);
       if (result) {
         currentUser = userSearchResult;
+        saveCurrentLoggedInUser();
         notifyListeners();
       }
       return result;
@@ -40,8 +49,20 @@ class AuthController with ChangeNotifier {
     }
   }
 
+  Future saveCurrentLoggedInUser() {
+    return accountsCache.put('currentUser', currentUser?.toJson());
+  }
+
+  loadCurrentLoggedInUser() {
+    var temp = accountsCache.get('currentUser');
+    if (temp != null) {
+      currentUser = User.fromJson(Map<String, dynamic>.from(temp));
+    }
+  }
+
   logout() {
     currentUser = null;
+    saveCurrentLoggedInUser();
     notifyListeners();
   }
 
@@ -59,6 +80,5 @@ class AuthController with ChangeNotifier {
     }
     print(dataToStore);
     accountsCache.put('users', dataToStore);
-    notifyListeners();
   }
 }
